@@ -1,7 +1,8 @@
 const router = require("express").Router();
-const { List, Add } = require("../controllers/userController");
+const { getUsers, addUser } = require("../controllers/userController");
+const { registerUserValidation } = require("../validator/userValidation");
 
-router.get("/", List);
-router.post("/", Add);
+router.get("/", getUsers);
+router.post("/", registerUserValidation, addUser);
 
 module.exports = router;
