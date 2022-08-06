@@ -15,6 +15,6 @@ module.exports.generateRefreshToken = (payload) => {
 module.exports.generateTokens = (payload) => {
   return {
     token: this.generateAccessToken(payload),
-    refreshToken: generateRefreshToken(payload),
+    refreshToken: this.generateRefreshToken(payload),
   };
 };

@@ -10,3 +10,12 @@ module.exports.registerUserValidation = [
   ],
   errorMessage,
 ];
+
+module.exports.loginValidation = [
+  [
+    check("email", "Email is Required.").not().isEmpty(),
+    check("email", "Please enter valid email address.").isEmail().bail(),
+    check("password", "Password is Required").not().isEmpty(),
+  ],
+  errorMessage,
+];
