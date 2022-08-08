@@ -18,6 +18,11 @@ class ApiError {
     const errorMessages = errors.filter((er) => er.code === err.code);
     return { errors: errorMessages };
   }
+
+  static Error(err) {
+    const errorMessages = errors.filter((er) => er.code === err.code);
+    return { errors: errorMessages };
+  }
 }
 
 module.exports = ApiError;

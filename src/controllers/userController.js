@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const { prismaError } = require("../error/ApiError");
+const { prismaError, Error } = require("../error/ApiError");
 const hashPwd = require("password-hash");
 const jwt = require("../middlewares/jwt");
 const prisma = new PrismaClient();
@@ -25,19 +25,26 @@ module.exports.addUser = (req, res) => {
 };
 
 module.exports.login = (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  prisma.users
-    .findFirst({ where: { email } })
-    .then((rs) => {
-      if (!rs) throw "data is empty";
-      const verifyAuth = hashPwd.verify(password, rs.password);
-      if (!verifyAuth) throw "password is not matched";
-      const result = {
-        success: true,
-        authTokens: jwt.generateTokens({ userInfo: { userId: rs.userId } }),
-      };
-      res.send(result);
-    })
-    .catch((err) => console.log(err));
+    prisma.users
+      .findFirst({ where: { email } })
+      .then((rs) => {
+        if (!rs) return res.json(Error({ code: "E001" }));
+        const verifyAuth = hashPwd.verify(password, rs.password);
+        if (!verifyAuth)
+          return res.sendStatus(400).json(Error({ code: "E002" }));
+        const result = {
+          success: true,
+          auth: jwt.generateTokens({ userInfo: { userId: rs.userId } }),
+        };
+        res.json(result);
+      })
+      .catch((err) =>
+        res.sendStatus(400).json({ errors: { msg: err.message } })
+      );
+  } catch (error) {
+    res.sendStatus(400).json({ errors: { msg: error.message } });
+  }
 };
