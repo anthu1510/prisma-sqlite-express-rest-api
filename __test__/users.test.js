@@ -1,4 +1,3 @@
-test("login test with default email and password", async () => {
-  const data = await fetchData();
-  expect(data).toBe("peanut butter");
-});
+const { login } = require("../src/controllers/userController");
+
+test("login test with default email and password", async () => {});
